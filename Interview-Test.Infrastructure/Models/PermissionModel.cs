@@ -13,9 +13,10 @@ public class PermissionModel
     public string Permission { get; set; }
 
     // FK → Role
+    [ForeignKey("RoleId")]
     [Column(TypeName = "int")]
     public int RoleId { get; set; }
 
-    [ForeignKey("RoleId")]
-    public RoleModel Role { get; set; }
+    //[ForeignKey("RoleId")]
+    public RoleModel? Role { get; set; }
 }

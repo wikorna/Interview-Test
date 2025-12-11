@@ -8,8 +8,13 @@ docker run --rm -it -p 8000:8080 interview-test.api
 dotnet ef migrations add InitializeDb -p Interview-Test.Infrastructure -s Interview-Test.Api
 
 //MacOS
-dotnet ef migrations add InitializeDB -s ./Interview-Test.Api -p ./Interview-Test.Infrastructure
+dotnet ef migrations add InitializeDb -s ./Interview-Test.Api -p ./Interview-Test.Infrastructure
 dotnet ef database update -s ./Interview-Test.Api -p ./Interview-Test.Infrastructure
+
+//Windows
+dotnet ef migrations add InitializeDb -s .\Interview-Test.Api -p .\Interview-Test.Infrastructure
+dotnet ef database update -s ./Interview-Test.Api -p ./Interview-Test.Infrastructure
+
 
 dotnet ef migrations remove -s ./Interview-Test.Api -p ./Interview-Test.Infrastructure
 

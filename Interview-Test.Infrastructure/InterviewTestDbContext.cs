@@ -21,36 +21,36 @@ public class InterviewTestDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         
-        /*// =======================
-        // ROLE SEED
-        // =======================
-        modelBuilder.Entity<RoleModel>().HasData(
-            new RoleModel { RoleId = 1, RoleName = "pick operation" },
-            new RoleModel { RoleId = 2, RoleName = "pack operation" },
-            new RoleModel { RoleId = 3, RoleName = "document operation" }
-        );
+        //// =======================
+        //// ROLE SEED
+        //// =======================
+        //modelBuilder.Entity<RoleModel>().HasData(
+        //    new RoleModel { RoleId = 1, RoleName = "pick operation" },
+        //    new RoleModel { RoleId = 2, RoleName = "pack operation" },
+        //    new RoleModel { RoleId = 3, RoleName = "document operation" }
+        //);
 
-        // =======================
-        // PERMISSION SEED
-        // =======================
-        modelBuilder.Entity<PermissionModel>().HasData(
-            // Role 1
-            new PermissionModel { PermissionId = 1, Permission = "1-01-picking-info", RoleId = 1 },
-            new PermissionModel { PermissionId = 2, Permission = "1-02-picking-start", RoleId = 1 },
-            new PermissionModel { PermissionId = 3, Permission = "1-03-picking-confirm", RoleId = 1 },
-            new PermissionModel { PermissionId = 4, Permission = "1-04-picking-report", RoleId = 1 },
+        //// =======================
+        //// PERMISSION SEED
+        //// =======================
+        //modelBuilder.Entity<PermissionModel>().HasData(
+        //    // Role 1
+        //    new PermissionModel { PermissionId = 1, Permission = "1-01-picking-info", RoleId = 1 },
+        //    new PermissionModel { PermissionId = 2, Permission = "1-02-picking-start", RoleId = 1 },
+        //    new PermissionModel { PermissionId = 3, Permission = "1-03-picking-confirm", RoleId = 1 },
+        //    new PermissionModel { PermissionId = 4, Permission = "1-04-picking-report", RoleId = 1 },
 
-            // Role 2
-            new PermissionModel { PermissionId = 5, Permission = "2-01-packing-info", RoleId = 2 },
-            new PermissionModel { PermissionId = 6, Permission = "2-02-packing-start", RoleId = 2 },
-            new PermissionModel { PermissionId = 7, Permission = "2-03-packing-confirm", RoleId = 2 },
-            new PermissionModel { PermissionId = 8, Permission = "2-04-packing-report", RoleId = 2 },
+        //    // Role 2
+        //    new PermissionModel { PermissionId = 5, Permission = "2-01-packing-info", RoleId = 2 },
+        //    new PermissionModel { PermissionId = 6, Permission = "2-02-packing-start", RoleId = 2 },
+        //    new PermissionModel { PermissionId = 7, Permission = "2-03-packing-confirm", RoleId = 2 },
+        //    new PermissionModel { PermissionId = 8, Permission = "2-04-packing-report", RoleId = 2 },
 
-            // Role 3
-            new PermissionModel { PermissionId = 9, Permission = "1-04-picking-report", RoleId = 3 },
-            new PermissionModel { PermissionId = 10, Permission = "2-04-packing-report", RoleId = 3 },
-            new PermissionModel { PermissionId = 11, Permission = "3-01-printing-label", RoleId = 3 }
-        );*/
+        //    // Role 3
+        //    new PermissionModel { PermissionId = 9, Permission = "1-04-picking-report", RoleId = 3 },
+        //    new PermissionModel { PermissionId = 10, Permission = "2-04-packing-report", RoleId = 3 },
+        //    new PermissionModel { PermissionId = 11, Permission = "3-01-printing-label", RoleId = 3 }
+        //);
         
         // User
         modelBuilder.Entity<UserModel>(entity =>

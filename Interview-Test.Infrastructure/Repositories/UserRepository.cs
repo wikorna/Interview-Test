@@ -90,60 +90,52 @@ namespace Interview_Test.Infrastructure.Repositories
                 throw;
             }
         }
-
-
-        public int CreateUser(UserModel user)
+        public async Task<int> CreateUser(UserModel user, CancellationToken token = default)
         {
             if (user == null) throw new ArgumentNullException(nameof(user));
 
-            // Map จาก user (Data.cs) → entity ใหม่ เพื่อเลี่ยง graph ซับซ้อน/dup
-            var newUser = new UserModel
-            {
-                UserId = user.UserId,
-                Username = user.Username,
-                UserProfile = user.UserProfile == null
-                    ? null
-                    : new UserProfileModel
-                    {
-                        FirstName = user.UserProfile.FirstName,
-                        LastName = user.UserProfile.LastName,
-                        Age = user.UserProfile.Age
-                    },
-                UserRoleMappings = new List<UserRoleMappingModel>()
-            };
+            // Insert User
+            _dbContext.UserTb.Add(user);
 
+            // Insert Profile
+            if (user.UserProfile != null)
+                _dbContext.UserProfileTb.Add(user.UserProfile);
+
+            // Insert Roles + Permissions + Mapping
             if (user.UserRoleMappings != null)
             {
-                foreach (var mapping in user.UserRoleMappings)
+                foreach (var map in user.UserRoleMappings)
                 {
-                    if (mapping.Role == null) continue;
+                    var role = map.Role;
 
-                    var newRole = new RoleModel
+                    if (role != null)
                     {
-                        RoleName = mapping.Role.RoleName,
-                        Permissions = mapping.Role.Permissions?
-                            .Select(p => new PermissionModel
-                            {
-                                Permission = p.Permission
-                            })
-                            .ToList() ?? new List<PermissionModel>()
-                    };
+                        // Insert Role
+                        _dbContext.RoleTb.Add(role);
 
-                    var newMapping = new UserRoleMappingModel
-                    {
-                        User = newUser,
-                        Role = newRole
-                    };
+                        // Insert Permission
+                        if (role.Permissions != null)
+                            _dbContext.PermissionTb.AddRange(role.Permissions);
+                    }
 
-                    newUser.UserRoleMappings.Add(newMapping);
+                    // Insert Mapping
+                    _dbContext.UserRoleMappingTb.Add(map);
                 }
             }
 
-            _dbContext.UserTb.Add(newUser);
-            // SaveChanges จะเซฟ User + Profile + Roles + Permissions + Mapping
-            var affectedRows = _dbContext.SaveChanges();
-            return affectedRows;
+            return await _dbContext.SaveChangesAsync(token);
         }
+        /*        public async Task<int> CreateUser(UserModel user, CancellationToken token = default)
+                {
+                    if (user == null) throw new ArgumentNullException(nameof(user));
+
+                    // ให้ EF Track graph ทั้งก้อนจาก User แค่ตัวเดียว
+                    _dbContext.UserTb.Add(user);
+
+                    // UserProfile, UserRoleMappings, Role, Permissions 
+                    // ที่ผูกผ่าน navigation จะถูก Insert ทั้งหมดใน SaveChangesAsync
+                    return await _dbContext.SaveChangesAsync(token);
+                }*/
 
     }
 }            

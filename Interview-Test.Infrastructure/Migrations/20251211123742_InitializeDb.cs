@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Interview_Test.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitializeDB : Migration
+    public partial class InitializeDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

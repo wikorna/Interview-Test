@@ -7,5 +7,5 @@ public interface IUserRepository
 {
     //dynamic GetUserById(string id);
     Task<UserDetailDto?> GetByUserId(string userId, CancellationToken token = default);
-    int CreateUser(UserModel user);
+    Task<int> CreateUser(UserModel user, CancellationToken token = default);
 }

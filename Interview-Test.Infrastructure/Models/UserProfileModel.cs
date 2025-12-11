@@ -15,6 +15,6 @@ public class UserProfileModel
     public string LastName { get; set; }
     public int? Age { get; set; }
     [ForeignKey("Id")]
-    [Required]
-    public UserModel User { get; set; }
+    //[Required]
+    public UserModel? User { get; set; }
 }
