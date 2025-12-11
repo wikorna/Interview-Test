@@ -15,7 +15,7 @@ services:
     container_name: webapp
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      #- ConnectionStrings__DefaultConnection=Server=.;Database=InterviewTestDb;User=sa;Password=@Passw0rd;Trusted_Connection=True;TrustServerCertificate=true;
+      - ConnectionStrings__DefaultConnection=Server=.;Database=InterviewTestDb;User=sa;Password=@Passw0rd;Trusted_Connection=True;TrustServerCertificate=true;
     depends_on:
       - sqlserver
     ports:

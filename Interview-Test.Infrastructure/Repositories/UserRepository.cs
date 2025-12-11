@@ -94,10 +94,56 @@ namespace Interview_Test.Infrastructure.Repositories
 
         public int CreateUser(UserModel user)
         {
-            //Todo: Implement this method
-            throw new NotImplementedException();
-        }
+            if (user == null) throw new ArgumentNullException(nameof(user));
 
+            // Map จาก user (Data.cs) → entity ใหม่ เพื่อเลี่ยง graph ซับซ้อน/dup
+            var newUser = new UserModel
+            {
+                UserId = user.UserId,
+                Username = user.Username,
+                UserProfile = user.UserProfile == null
+                    ? null
+                    : new UserProfileModel
+                    {
+                        FirstName = user.UserProfile.FirstName,
+                        LastName = user.UserProfile.LastName,
+                        Age = user.UserProfile.Age
+                    },
+                UserRoleMappings = new List<UserRoleMappingModel>()
+            };
+
+            if (user.UserRoleMappings != null)
+            {
+                foreach (var mapping in user.UserRoleMappings)
+                {
+                    if (mapping.Role == null) continue;
+
+                    var newRole = new RoleModel
+                    {
+                        RoleName = mapping.Role.RoleName,
+                        Permissions = mapping.Role.Permissions?
+                            .Select(p => new PermissionModel
+                            {
+                                Permission = p.Permission
+                            })
+                            .ToList() ?? new List<PermissionModel>()
+                    };
+
+                    var newMapping = new UserRoleMappingModel
+                    {
+                        User = newUser,
+                        Role = newRole
+                    };
+
+                    newUser.UserRoleMappings.Add(newMapping);
+                }
+            }
+
+            _dbContext.UserTb.Add(newUser);
+            // SaveChanges จะเซฟ User + Profile + Roles + Permissions + Mapping
+            var affectedRows = _dbContext.SaveChanges();
+            return affectedRows;
+        }
 
     }
 }            

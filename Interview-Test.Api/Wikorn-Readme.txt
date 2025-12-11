@@ -5,6 +5,14 @@ docker run --rm -it -p 8000:8080 -e ASPNETCORE_ENVIRONMENT=Development interview
 docker run --rm -it -p 8000:8080 interview-test.api
 
 
-dotnet ef migrations add FixUserRoleMapping -p Interview-Test.Infrastructure -s Interview-Test.Api
+dotnet ef migrations add InitializeDb -p Interview-Test.Infrastructure -s Interview-Test.Api
+
+//MacOS
+dotnet ef migrations add InitializeDB -s ./Interview-Test.Api -p ./Interview-Test.Infrastructure
+dotnet ef database update -s ./Interview-Test.Api -p ./Interview-Test.Infrastructure
+
+dotnet ef migrations remove -s ./Interview-Test.Api -p ./Interview-Test.Infrastructure
+
+
 dotnet ef migrations add AddMoreUserRole -p Interview-Test.Infrastructure -s Interview-Test.Api
 dotnet ef database update -p Interview-Test.Infrastructure -s Interview-Test.Api
