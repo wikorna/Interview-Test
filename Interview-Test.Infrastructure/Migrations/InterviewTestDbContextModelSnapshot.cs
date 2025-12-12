@@ -33,7 +33,7 @@ namespace Interview_Test.Infrastructure.Migrations
                     b.Property<string>("Permission")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
@@ -43,6 +43,62 @@ namespace Interview_Test.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("PermissionTb");
+
+                    b.HasData(
+                        new
+                        {
+                            PermissionId = 1L,
+                            Permission = "1-01-picking-info",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            PermissionId = 2L,
+                            Permission = "1-02-picking-start",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            PermissionId = 3L,
+                            Permission = "1-03-picking-confirm",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            PermissionId = 4L,
+                            Permission = "1-04-picking-report",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            PermissionId = 5L,
+                            Permission = "2-01-packing-info",
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            PermissionId = 6L,
+                            Permission = "2-02-packing-start",
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            PermissionId = 7L,
+                            Permission = "2-03-packing-confirm",
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            PermissionId = 8L,
+                            Permission = "2-04-packing-report",
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            PermissionId = 9L,
+                            Permission = "3-01-printing-label",
+                            RoleId = 3
+                        });
                 });
 
             modelBuilder.Entity("Interview_Test.Models.RoleModel", b =>
@@ -61,6 +117,23 @@ namespace Interview_Test.Infrastructure.Migrations
                     b.HasKey("RoleId");
 
                     b.ToTable("RoleTb");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            RoleName = "pick operation"
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            RoleName = "pack operation"
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            RoleName = "document operation"
+                        });
                 });
 
             modelBuilder.Entity("Interview_Test.Models.UserModel", b =>
@@ -100,7 +173,7 @@ namespace Interview_Test.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LastName")
@@ -110,7 +183,8 @@ namespace Interview_Test.Infrastructure.Migrations
                     b.HasKey("ProfileId");
 
                     b.HasIndex("Id")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[Id] IS NOT NULL");
 
                     b.ToTable("UserProfileTb");
                 });
@@ -152,9 +226,7 @@ namespace Interview_Test.Infrastructure.Migrations
                 {
                     b.HasOne("Interview_Test.Models.UserModel", "User")
                         .WithOne("UserProfile")
-                        .HasForeignKey("Interview_Test.Models.UserProfileModel", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Interview_Test.Models.UserProfileModel", "Id");
 
                     b.Navigation("User");
                 });

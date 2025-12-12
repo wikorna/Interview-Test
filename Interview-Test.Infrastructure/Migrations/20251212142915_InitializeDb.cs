@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Interview_Test.Infrastructure.Migrations
 {
     /// <inheritdoc />
@@ -43,7 +45,7 @@ namespace Interview_Test.Infrastructure.Migrations
                 {
                     PermissionId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Permission = table.Column<string>(type: "text", maxLength: 200, nullable: false),
+                    Permission = table.Column<string>(type: "varchar(100)", maxLength: 200, nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -65,7 +67,7 @@ namespace Interview_Test.Infrastructure.Migrations
                     FirstName = table.Column<string>(type: "varchar(100)", nullable: false),
                     LastName = table.Column<string>(type: "varchar(100)", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: true),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -74,8 +76,7 @@ namespace Interview_Test.Infrastructure.Migrations
                         name: "FK_UserProfileTb_UserTb_Id",
                         column: x => x.Id,
                         principalTable: "UserTb",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -103,6 +104,32 @@ namespace Interview_Test.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "RoleTb",
+                columns: new[] { "RoleId", "RoleName" },
+                values: new object[,]
+                {
+                    { 1, "pick operation" },
+                    { 2, "pack operation" },
+                    { 3, "document operation" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PermissionTb",
+                columns: new[] { "PermissionId", "Permission", "RoleId" },
+                values: new object[,]
+                {
+                    { 1L, "1-01-picking-info", 1 },
+                    { 2L, "1-02-picking-start", 1 },
+                    { 3L, "1-03-picking-confirm", 1 },
+                    { 4L, "1-04-picking-report", 1 },
+                    { 5L, "2-01-packing-info", 2 },
+                    { 6L, "2-02-packing-start", 2 },
+                    { 7L, "2-03-packing-confirm", 2 },
+                    { 8L, "2-04-packing-report", 2 },
+                    { 9L, "3-01-printing-label", 3 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_PermissionTb_RoleId",
                 table: "PermissionTb",
@@ -112,7 +139,8 @@ namespace Interview_Test.Infrastructure.Migrations
                 name: "IX_UserProfileTb_Id",
                 table: "UserProfileTb",
                 column: "Id",
-                unique: true);
+                unique: true,
+                filter: "[Id] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoleMappingTb_RoleId",

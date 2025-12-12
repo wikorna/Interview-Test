@@ -16,7 +16,6 @@ public class UserController : ControllerBase
         _userRepository = userRepository;
     }
 
-    // ✅ ใช้ repository + mapping → ไม่ใช้ Data.Users แล้ว
     [HttpGet("GetUserById/{id}")]
     public async Task<ActionResult<UserDetailDto>> GetUserById(string id, CancellationToken cancellationToken)
     {
@@ -25,7 +24,6 @@ public class UserController : ControllerBase
             return BadRequest("userId is required.");
         }
 
-        // ตอนนี้ user คือ UserDetailDto? ไม่ใช่ UserModel
         var user = await _userRepository.GetByUserId(id, cancellationToken);
 
         if (user is null)
@@ -33,7 +31,6 @@ public class UserController : ControllerBase
             return NotFound();
         }
 
-        // ไม่ต้อง ToUserDetailDto แล้ว
         return Ok(user);
     }
 
@@ -42,15 +39,18 @@ public class UserController : ControllerBase
     {
         if (!ModelState.IsValid)
             return ValidationProblem(ModelState);
-
-        // 1) สร้าง User ใหม่ (อย่าใช้ request.Id ให้ DB gen เอง)
+        
+        if (request.UserRoleMappings is null || request.UserRoleMappings.Count == 0)
+            return BadRequest("At least one role is required.");
+        
         var user = new UserModel
         {
+            Id = request.Id,
             UserId = request.UserId,
             Username = request.Username,
             UserProfile = new UserProfileModel
             {
-                // ไม่ set ProfileId ถ้าเป็น identity
+                //ProfileId = request.UserProfile.ProfileId, //"00000000-0000-0000-0000-000000000000"
                 FirstName = request.UserProfile.FirstName,
                 LastName = request.UserProfile.LastName,
                 Age = request.UserProfile.Age
@@ -58,50 +58,50 @@ public class UserController : ControllerBase
             UserRoleMappings = new List<UserRoleMappingModel>()
         };
 
-        if (request.UserRoleMappings is not null)
-        {
-            foreach (var map in request.UserRoleMappings)
-            {
-                var roleReq = map.Role;
-                if (roleReq is null)
-                    continue;
-
-                // ✅ สร้าง Role ใหม่จาก JSON แต่ "ไม่ใช้ RoleId จาก request"
-                var role = new RoleModel
+        /*        if (request.UserRoleMappings is not null)
                 {
-                    // RoleId = 0; // ปล่อย default ให้เป็น 0 หรือไม่ set เลย
-                    RoleName = roleReq.RoleName,
-                    Permissions = new List<PermissionModel>()
-                };
-
-                // ✅ สร้าง Permission ใหม่จาก JSON — ห้ามใช้ PermissionId จาก request
-                if (roleReq.Permissions is not null)
-                {
-                    foreach (var permReq in roleReq.Permissions)
+                    foreach (var map in request.UserRoleMappings)
                     {
-                        var perm = new PermissionModel
+                        var roleReq = map.Role;
+                        if (roleReq is null)
+                            continue;
+                        var role = new RoleModel
                         {
-                            // PermissionId = 0; // identity ให้ DB gen
-                            Permission = permReq.Permission
-                            // RoleId ไม่ต้อง set EF จะจัดการจาก nav Role
+                            //RoleId= roleReq.RoleId,
+                            RoleName = roleReq.RoleName,
+                            Permissions = new List<PermissionModel>()
                         };
-
-                        role.Permissions.Add(perm);
+                        if (roleReq.Permissions is not null)
+                        {
+                            foreach (var permReq in roleReq.Permissions)
+                            {
+                                role.Permissions.Add(new PermissionModel
+                                {
+                                    Permission = permReq.Permission
+                                });
+                            }
+                        }
+                        user.UserRoleMappings.Add(new UserRoleMappingModel
+                        {
+                            //UserRoleMappingId = map.UserRoleMappingId,
+                            //UserId = user.Id,
+                            //RoleId = role.RoleId,
+                            User = user,
+                            Role = role
+                        });
                     }
-                }
+                }*/
 
-                // ✅ Mapping เชื่อม User ↔ Role
-                var mapping = new UserRoleMappingModel
-                {
-                    User = user,
-                    Role = role
-                    // UserId/RoleId ให้ EF fill จาก nav
-                };
 
-                user.UserRoleMappings.Add(mapping);
-            }
+        foreach (var map in request.UserRoleMappings ?? Enumerable.Empty<UserRoleMappingModel>())
+        {
+            user.UserRoleMappings.Add(new UserRoleMappingModel
+            {
+                User = user,
+                RoleId = map.RoleId,
+                UserId = user.Id
+            });
         }
-
         await _userRepository.CreateUser(user, cancellationToken);
 
         var created = await _userRepository.GetByUserId(user.UserId, cancellationToken);

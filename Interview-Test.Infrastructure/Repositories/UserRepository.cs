@@ -28,12 +28,11 @@ namespace Interview_Test.Infrastructure.Repositories
         {
             try
             {
-                // ดึง User + Profile + Roles + Permissions
                 var user = await _dbContext.UserTb
-                    .Include(u => u.UserProfile)                // สมมติ nav property ชื่อ UserProfile
-                    .Include(u => u.UserRoleMappings)           // ICollection<UserRoleMappingModel>
-                        .ThenInclude(urm => urm.Role)           // nav Role
-                            .ThenInclude(r => r.Permissions)    // ICollection<PermissionModel>
+                    .Include(u => u.UserProfile)                
+                    .Include(u => u.UserRoleMappings)           
+                        .ThenInclude(urm => urm.Role)           
+                            .ThenInclude(r => r.Permissions)    
                     .AsNoTracking()
                     .SingleOrDefaultAsync(u => u.UserId == userId, cancellationToken);
 
@@ -46,8 +45,6 @@ namespace Interview_Test.Infrastructure.Repositories
                 _logger.LogInformation("Retrieved user with UserId {UserId} from database.", userId);
 
                 var profile = user.UserProfile;
-
-                // ดึง roles (ไม่ซ้ำ)
                 var roles = user.UserRoleMappings
                     .Where(urm => urm.Role != null)
                     .Select(urm => urm.Role!)
@@ -61,7 +58,6 @@ namespace Interview_Test.Infrastructure.Repositories
                     })
                     .ToList();
 
-                // ดึง permissions flatten เป็น list<string>
                 var permissions = user.UserRoleMappings
                     .Where(urm => urm.Role != null)
                     .SelectMany(urm => urm.Role!.Permissions)
@@ -90,52 +86,40 @@ namespace Interview_Test.Infrastructure.Repositories
                 throw;
             }
         }
-        public async Task<int> CreateUser(UserModel user, CancellationToken token = default)
-        {
-            if (user == null) throw new ArgumentNullException(nameof(user));
-
-            // Insert User
-            _dbContext.UserTb.Add(user);
-
-            // Insert Profile
-            if (user.UserProfile != null)
-                _dbContext.UserProfileTb.Add(user.UserProfile);
-
-            // Insert Roles + Permissions + Mapping
-            if (user.UserRoleMappings != null)
-            {
-                foreach (var map in user.UserRoleMappings)
-                {
-                    var role = map.Role;
-
-                    if (role != null)
-                    {
-                        // Insert Role
-                        _dbContext.RoleTb.Add(role);
-
-                        // Insert Permission
-                        if (role.Permissions != null)
-                            _dbContext.PermissionTb.AddRange(role.Permissions);
-                    }
-
-                    // Insert Mapping
-                    _dbContext.UserRoleMappingTb.Add(map);
-                }
-            }
-
-            return await _dbContext.SaveChangesAsync(token);
-        }
         /*        public async Task<int> CreateUser(UserModel user, CancellationToken token = default)
                 {
                     if (user == null) throw new ArgumentNullException(nameof(user));
 
-                    // ให้ EF Track graph ทั้งก้อนจาก User แค่ตัวเดียว
                     _dbContext.UserTb.Add(user);
 
-                    // UserProfile, UserRoleMappings, Role, Permissions 
-                    // ที่ผูกผ่าน navigation จะถูก Insert ทั้งหมดใน SaveChangesAsync
+                    if (user.UserProfile != null)
+                        _dbContext.UserProfileTb.Add(user.UserProfile);
+
+                    if (user.UserRoleMappings != null)
+                    {
+                        foreach (var map in user.UserRoleMappings)
+                        {
+                            //// Seed Look up table
+                            //var role = map.Role;
+                            //if (role != null)
+                            //{
+                            //    _dbContext.RoleTb.Add(role);
+                            //    if (role.Permissions != null)
+                            //        _dbContext.PermissionTb.AddRange(role.Permissions);
+                            //}
+
+                            _dbContext.UserRoleMappingTb.Add(map);
+                        }
+                    }
+
                     return await _dbContext.SaveChangesAsync(token);
                 }*/
+        public async Task<int> CreateUser(UserModel user, CancellationToken token = default)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
 
+            _dbContext.UserTb.Add(user);
+            return await _dbContext.SaveChangesAsync(token);
+        }
     }
 }            
