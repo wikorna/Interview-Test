@@ -21,12 +21,6 @@ public class UserRepository : BaseRepository<Models.UserModel>, IUserRepository
         : base(dbContext, logger)
     {
     }
-    /*        
-     *      public dynamic GetUserById(string id)
-            {
-                //Todo: Implement this method
-                throw new NotImplementedException();
-            }*/
 
     public async Task<UserDetailDto?> GetByUserId(string userId, CancellationToken cancellationToken = default)
     {
@@ -126,7 +120,7 @@ public class UserRepository : BaseRepository<Models.UserModel>, IUserRepository
 
             var user = new UserModel
             {
-                Id = src.Id,                 // โจทย์ expect id fixed
+                Id = src.Id,
                 UserId = src.UserId,
                 Username = src.Username,
                 UserProfile = new UserProfileModel
@@ -134,7 +128,7 @@ public class UserRepository : BaseRepository<Models.UserModel>, IUserRepository
                     FirstName = src.UserProfile.FirstName,
                     LastName = src.UserProfile.LastName,
                     Age = src.UserProfile.Age,
-                    User = null // กัน validation/graph
+                    User = null 
                 },
                 UserRoleMappings = roleIds.Select(rid => new UserRoleMappingModel
                 {

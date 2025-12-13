@@ -1,1 +1,51 @@
-﻿<p>todo</p>
+﻿<h1 class="page-title">Users</h1>
+
+<div class="toolbar">
+    <input
+            type="search"
+            [(ngModel)]="query"
+            placeholder="Search by id, userId, username, name"
+            aria-label="Search users"
+    />
+
+    <button class="btn" type="button" (click)="refresh()" [disabled]="loading">
+        Refresh
+    </button>
+</div>
+
+<div *ngIf="loading" class="muted">Loading...</div>
+
+<div *ngIf="error" class="error">
+    {{ error }}
+    <div class="muted" style="margin-top:.35rem;">
+        Tip: set API base URL and x-api-key in <code>UserService</code>.
+    </div>
+</div>
+
+<table class="table" *ngIf="!loading && !error">
+    <thead>
+    <tr>
+        <th style="width: 12%">UserId</th>
+        <th style="width: 18%">Username</th>
+        <th>Name</th>
+        <th style="width: 10%">Age</th>
+        <th style="width: 10%">#Roles</th>
+        <th style="width: 14%">#Permissions</th>
+        <th style="width: 10%">Detail</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let u of filteredUsers()">
+        <td>{{ u.userId }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ displayName(u) }}</td>
+        <td>{{ displayAge(u) }}</td>
+        <td>{{ rolesCount(u) }}</td>
+        <td>{{ permissionsCount(u) }}</td>
+        <td>
+            <a [routerLink]="['/users', u.userId]">View</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

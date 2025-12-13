@@ -1,1 +1,62 @@
-﻿<p>todo</p>
+﻿<div class="back-link">
+    <a routerLink="/users">← Back to Users</a>
+</div>
+
+<h1 class="page-title">User Detail</h1>
+
+<div *ngIf="loading" class="muted">Loading...</div>
+
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<ng-container *ngIf="!loading && !error && user">
+    <div class="card">
+        <h2 class="card-title">{{ fullName() }}</h2>
+
+        <div class="grid-3">
+            <div>
+                <div class="kv"><span class="k">ID:</span> <span class="v mono">{{ user.id }}</span></div>
+                <div class="kv"><span class="k">Age:</span> <span class="v">{{ displayAge() }}</span></div>
+            </div>
+            <div>
+                <div class="kv"><span class="k">UserId:</span> <span class="v">{{ user.userId }}</span></div>
+            </div>
+            <div>
+                <div class="kv"><span class="k">Username:</span> <span class="v">{{ user.username }}</span></div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="section-title">Roles ({{ user.roles?.length || 0 }})</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th style="width:8%">#</th>
+            <th style="width:18%">Role ID</th>
+            <th>Role Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let r of user.roles; index as i">
+            <td>{{ i + 1 }}</td>
+            <td>{{ r.roleId }}</td>
+            <td>{{ r.roleName }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3 class="section-title">Permissions ({{ user.permissions?.length || 0 }})</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th style="width:8%">#</th>
+            <th>Permission</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let p of user.permissions; index as i">
+            <td>{{ i + 1 }}</td>
+            <td>{{ p }}</td>
+        </tr>
+        </tbody>
+    </table>
+</ng-container>
