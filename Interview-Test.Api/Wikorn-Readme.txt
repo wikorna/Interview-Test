@@ -13,7 +13,7 @@ dotnet ef database update -s ./Interview-Test.Api -p ./Interview-Test.Infrastruc
 
 //Windows
 dotnet ef migrations add InitializeDb -s .\Interview-Test.Api -p .\Interview-Test.Infrastructure
-dotnet ef database update -s ./Interview-Test.Api -p ./Interview-Test.Infrastructure
+dotnet ef database update -s .\Interview-Test.Api -p .\Interview-Test.Infrastructure
 
 
 dotnet ef migrations remove -s ./Interview-Test.Api -p ./Interview-Test.Infrastructure

@@ -19,7 +19,7 @@ namespace Interview_Test.Infrastructure.Migrations
                 {
                     RoleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    RoleName = table.Column<string>(type: "varchar(100)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,8 +31,8 @@ namespace Interview_Test.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false),
-                    Username = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    UserId = table.Column<string>(type: "varchar(20)", nullable: false),
+                    Username = table.Column<string>(type: "varchar(100)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,17 +66,17 @@ namespace Interview_Test.Infrastructure.Migrations
                     ProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "varchar(100)", nullable: false),
                     LastName = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: true),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Age = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserProfileTb", x => x.ProfileId);
                     table.ForeignKey(
-                        name: "FK_UserProfileTb_UserTb_Id",
-                        column: x => x.Id,
+                        name: "FK_UserProfileTb_UserTb_ProfileId",
+                        column: x => x.ProfileId,
                         principalTable: "UserTb",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -127,20 +127,15 @@ namespace Interview_Test.Infrastructure.Migrations
                     { 6L, "2-02-packing-start", 2 },
                     { 7L, "2-03-packing-confirm", 2 },
                     { 8L, "2-04-packing-report", 2 },
-                    { 9L, "3-01-printing-label", 3 }
+                    { 9L, "3-01-printing-label", 3 },
+                    { 10L, "1-04-picking-report", 3 },
+                    { 11L, "2-04-packing-report", 3 }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PermissionTb_RoleId",
                 table: "PermissionTb",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserProfileTb_Id",
-                table: "UserProfileTb",
-                column: "Id",
-                unique: true,
-                filter: "[Id] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoleMappingTb_RoleId",

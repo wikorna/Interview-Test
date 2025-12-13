@@ -1,7 +1,7 @@
 ﻿using Interview_Test.Infrastructure.DTOs;
 using Interview_Test.Models;
 
-namespace Interview_Test.Infrastructure.Interfaces;
+namespace Interview_Test.Repositories.Interfaces;
 
 public interface IUserRepository
 {

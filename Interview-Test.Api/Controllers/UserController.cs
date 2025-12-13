@@ -1,7 +1,7 @@
 ﻿using Interview_Test.Infrastructure.DTOs;
 using Interview_Test.Models;
-using Interview_Test.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Interview_Test.Repositories.Interfaces;
 
 namespace Interview_Test.Controllers;
 
@@ -35,30 +35,45 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("CreateUser")]
-    public async Task<ActionResult<UserDetailDto>> CreateUser([FromBody] UserModel request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateUser([FromBody] UserModel user, CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
-            return ValidationProblem(ModelState);
-        
-        if (request.UserRoleMappings is null || request.UserRoleMappings.Count == 0)
-            return BadRequest("At least one role is required.");
-        
-        var user = new UserModel
-        {
-            Id = request.Id,
-            UserId = request.UserId,
-            Username = request.Username,
-            UserProfile = new UserProfileModel
-            {
-                //ProfileId = request.UserProfile.ProfileId, //"00000000-0000-0000-0000-000000000000"
-                FirstName = request.UserProfile.FirstName,
-                LastName = request.UserProfile.LastName,
-                Age = request.UserProfile.Age
-            },
-            UserRoleMappings = new List<UserRoleMappingModel>()
-        };
+        var affected = await _userRepository.CreateUser(user, cancellationToken);
+        return Ok(new { affected });
+    }
 
-        /*        if (request.UserRoleMappings is not null)
+
+    /*        [HttpPost("CreateUser")]
+            public async Task<ActionResult<UserDetailDto>> CreateUser(UserModel request, CancellationToken cancellationToken)
+            {
+                if (!ModelState.IsValid)
+                    return ValidationProblem(ModelState);
+
+                if (request.UserRoleMappings is null || request.UserRoleMappings.Count == 0)
+                    return BadRequest("At least one role is required.");
+                var roleIds = request.UserRoleMappings
+                    .Select(x => x.RoleId)
+                    .Where(x => x > 0)
+                    .Distinct()
+                    .ToList();
+                var user = new UserModel
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = request.UserId,
+                    Username = request.Username,
+                    UserProfile = new UserProfileModel
+                    {
+                        FirstName = request.UserProfile.FirstName,
+                        LastName = request.UserProfile.LastName,
+                        Age = request.UserProfile.Age
+                    },
+                    UserRoleMappings = roleIds.Select(rid => new UserRoleMappingModel
+                    {
+                        UserRoleMappingId = Guid.NewGuid(),
+                        RoleId = rid
+                    }).ToList()
+                };
+
+                if (request.UserRoleMappings is not null)
                 {
                     foreach (var map in request.UserRoleMappings)
                     {
@@ -77,39 +92,42 @@ public class UserController : ControllerBase
                             {
                                 role.Permissions.Add(new PermissionModel
                                 {
-                                    Permission = permReq.Permission
+                                    //PermissionId= permReq.PermissionId,
+                                    Permission = permReq.Permission,
+                                    //RoleId = permReq.RoleId
                                 });
                             }
                         }
                         user.UserRoleMappings.Add(new UserRoleMappingModel
                         {
-                            //UserRoleMappingId = map.UserRoleMappingId,
+                            UserRoleMappingId = map.UserRoleMappingId,
                             //UserId = user.Id,
                             //RoleId = role.RoleId,
                             User = user,
                             Role = role
                         });
                     }
-                }*/
+                }
 
 
-        foreach (var map in request.UserRoleMappings ?? Enumerable.Empty<UserRoleMappingModel>())
-        {
-            user.UserRoleMappings.Add(new UserRoleMappingModel
-            {
-                User = user,
-                RoleId = map.RoleId,
-                UserId = user.Id
-            });
-        }
-        await _userRepository.CreateUser(user, cancellationToken);
+                foreach (var map in request.UserRoleMappings ?? Enumerable.Empty<UserRoleMappingModel>())
+                {
+                    user.UserRoleMappings.Add(new UserRoleMappingModel
+                    {
+                        //User = user,
+                        //RoleId = map.RoleId,
+                        //UserId = user.Id
+                    });
+                }
+                await _userRepository.CreateUser(user, cancellationToken);
 
-        var created = await _userRepository.GetByUserId(user.UserId, cancellationToken);
-        if (created is null)
-            return StatusCode(500, "User was created but could not be loaded.");
+                var created = await _userRepository.GetByUserId(user.UserId, cancellationToken);
+                if (created is null)
+                    return StatusCode(500, "User was created but could not be loaded.");
 
-        return CreatedAtAction(nameof(GetUserById),
-            new { id = created.UserId },
-            created);
-    }
+                return CreatedAtAction(nameof(GetUserById),
+                    new { id = created.UserId },
+                    created);
+            }
+    */
 }

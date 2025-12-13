@@ -98,6 +98,18 @@ namespace Interview_Test.Infrastructure.Migrations
                             PermissionId = 9L,
                             Permission = "3-01-printing-label",
                             RoleId = 3
+                        },
+                        new
+                        {
+                            PermissionId = 10L,
+                            Permission = "1-04-picking-report",
+                            RoleId = 3
+                        },
+                        new
+                        {
+                            PermissionId = 11L,
+                            Permission = "2-04-packing-report",
+                            RoleId = 3
                         });
                 });
 
@@ -111,7 +123,6 @@ namespace Interview_Test.Infrastructure.Migrations
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.HasKey("RoleId");
@@ -144,12 +155,10 @@ namespace Interview_Test.Infrastructure.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
@@ -163,7 +172,6 @@ namespace Interview_Test.Infrastructure.Migrations
             modelBuilder.Entity("Interview_Test.Models.UserProfileModel", b =>
                 {
                     b.Property<Guid>("ProfileId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("Age")
@@ -173,18 +181,11 @@ namespace Interview_Test.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
-                    b.Property<Guid?>("Id")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
                     b.HasKey("ProfileId");
-
-                    b.HasIndex("Id")
-                        .IsUnique()
-                        .HasFilter("[Id] IS NOT NULL");
 
                     b.ToTable("UserProfileTb");
                 });
@@ -226,7 +227,9 @@ namespace Interview_Test.Infrastructure.Migrations
                 {
                     b.HasOne("Interview_Test.Models.UserModel", "User")
                         .WithOne("UserProfile")
-                        .HasForeignKey("Interview_Test.Models.UserProfileModel", "Id");
+                        .HasForeignKey("Interview_Test.Models.UserProfileModel", "ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
