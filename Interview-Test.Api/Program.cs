@@ -1,17 +1,21 @@
 ﻿using Interview_Test.Infrastructure;
-using Interview_Test.Infrastructure.Interfaces;
-using Interview_Test.Infrastructure.Repositories;
 using Interview_Test.Middlewares;
+using Interview_Test.Repositories;
+using Interview_Test.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
+//builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
+
 var connection = builder.Configuration.GetConnectionString("DefaultConnection")
                       ?? "<your database connection string>";
 builder.Services.AddDbContext<InterviewTestDbContext>(options =>
@@ -25,11 +29,12 @@ builder.Services.AddDbContext<InterviewTestDbContext>(options =>
             });
     }
 );
-// ⬅️ เพิ่มสองบรรทัดนี้อย่างน้อยอันแรก
-builder.Services.AddTransient<AuthenMiddleware>();      // สำหรับ IMiddleware
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-var app = builder.Build();
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddTransient<AuthenMiddleware>();
+
+var app = builder.Build();
+app.UseRouting();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -37,6 +42,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseMiddleware<AuthenMiddleware>();
-app.UseMvc();
+
+//app.UseMvc();
+app.MapControllers();
+
 app.Run();

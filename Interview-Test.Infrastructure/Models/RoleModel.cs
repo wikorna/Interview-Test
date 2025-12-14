@@ -12,7 +12,7 @@ public class RoleModel
     public int RoleId { get; set; }
     [Required]
     [Column(TypeName = "varchar(100)")]
-    public string RoleName { get; set; }
+    public string RoleName { get; set; }=default!;
     [DeleteBehavior(DeleteBehavior.Cascade)]
     public ICollection<PermissionModel> Permissions { get; set; } = new List<PermissionModel>();
     public ICollection<UserRoleMappingModel> UserRoleMappings { get; set; } = new List<UserRoleMappingModel>();

@@ -18,10 +18,10 @@ public class UserModel
     [Column(TypeName = "varchar(100)")]
     public string Username { get; set; }
 
-    [Required]
-    [DeleteBehavior(DeleteBehavior.Cascade)]
-    public UserProfileModel UserProfile { get; set; }
+    /*[Required]
+    [DeleteBehavior(DeleteBehavior.Cascade)]*/
+    public UserProfileModel UserProfile { get; set; } = default!;
 
-    [Required]
-    public ICollection<UserRoleMappingModel> UserRoleMappings { get; set; }        = new List<UserRoleMappingModel>();
+    //[Required]
+    public ICollection<UserRoleMappingModel> UserRoleMappings { get; set; } = new List<UserRoleMappingModel>();        
 }
