@@ -5,7 +5,7 @@ namespace Interview_Test.Middlewares;
 public class AuthenMiddleware : IMiddleware
 {
     // SHA512 ที่ hash แล้วของ x-api-key 
-    private const string hashedKey = "7DAF16EB5088006C9D55BE83CBE46586D7C7A5D68341683B6939389E2164C86227424ADD89C43F4101A41DF1D8CD4CC05BA99783C7199EDF6AD00C755BEF233C";
+    private const string hashedKey = "BC92C479E1FE12E40747F056B8E14FBC36C64A4D3A4611E174038F3251FF0602F5B3325F528B87AC2655484272BC8A6E52FC07486353A902441BDE3D21CDF0B6";
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         Console.WriteLine($"[Auth] IN  {context.Request.Method} {context.Request.Path}");
