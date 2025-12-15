@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/gateway/{everything}",
+      "UpstreamPathTemplate": "/gateway/{path}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS" ],
 
       "DownstreamScheme": "https",
@@ -11,18 +11,11 @@
           "Port": 7198
         }
       ],
-      "DownstreamPathTemplate": "/{everything}",
-
-      "AddHeadersToRequest": {
-        "x-api-key": "<your hashed sha512 x-api-key>"
-      },
-      "DangerousAcceptAnyServerCertificateValidator": true
+      "DownstreamPathTemplate": "/{path}",
+      "DangerousAcceptAnyServerCertificateValidator": true      
     }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:44375"
   }
 }
-
-//WIKORN'URL 
-//https://localhost:44375/gateway/api/user/getuserbyid/user01
