@@ -9,39 +9,47 @@
 <div *ngIf="error" class="error">{{ error }}</div>
 
 <ng-container *ngIf="!loading && !error && user">
+    <!-- CARD -->
+    <div class="card"
+         style="background:#f2f3f5; border-radius:12px; padding:20px 24px;
+              border:1px solid #e5e6e9;">
 
-    <div class="card" style="background:#f8f9fa; border-radius:10px; padding:20px;">
-        <h2 class="card-title">
+        <!-- ชื่อ John Smith -->
+        <h2 class="card-title"
+            style="margin:0 0 16px; font-size:20px; font-weight:600; color:#000;">
             {{ fullName() }}
         </h2>
-        <div class="card-body">
-            <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
 
-                <div class="kv" style="flex:1;">
-                    <span class="k" style="font-weight:600;">ID:</span>
-                    <span class="v mono">{{ user.id }}</span>
+        <div class="card-body" style="font-size:14px;">
+
+            <!-- แถว ID / UserId / Username -->
+            <div style="display:flex; justify-content:space-between; gap:40px; margin-bottom:10px;">
+
+                <div style="flex:1;">
+                    <span style="font-weight:700;">ID:</span>
+                    <span class="mono" style="word-break:break-all;">
+            {{ user.id }}
+          </span>
                 </div>
 
-                <div class="kv" style="flex:1; text-align:center;">
-                    <span class="k" style="font-weight:600;">UserId:</span>
-                    <span class="v">{{ user.userId }}</span>
+                <div style="flex:1; text-align:center;">
+                    <span style="font-weight:700;">UserId: </span>
+                    <span>{{ user.userId }}</span>
                 </div>
 
-                <div class="kv" style="flex:1; text-align:right;">
-                    <span class="k" style="font-weight:600;">Username:</span>
-                    <span class="v">{{ user.username }}</span>
+                <div style="flex:1; text-align:right;">
+                    <span style="font-weight:700;">Username: </span>
+                    <span>{{ user.username }}</span>
                 </div>
-
             </div>
 
-            <!-- Age -->
-            <div class="kv">
-                <span class="k" style="font-weight:600;">Age:</span>
-                <span class="v">{{ displayAge() }}</span>
+            <div>
+                <span style="font-weight:700;">Age: </span>
+                <span>{{ displayAge() }}</span>
             </div>
-
         </div>
     </div>
+
 
     <h3 class="section-title">Roles ({{ user.roles?.length || 0 }})</h3>
     <table class="table">
