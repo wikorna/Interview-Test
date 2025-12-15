@@ -9,20 +9,37 @@
 <div *ngIf="error" class="error">{{ error }}</div>
 
 <ng-container *ngIf="!loading && !error && user">
-    <div class="card">
-        <h2 class="card-title">{{ fullName() }}</h2>
 
-        <div class="grid-3">
-            <div>
-                <div class="kv"><span class="k">ID:</span> <span class="v mono">{{ user.id }}</span></div>
-                <div class="kv"><span class="k">Age:</span> <span class="v">{{ displayAge() }}</span></div>
+    <div class="card" style="background:#f8f9fa; border-radius:10px; padding:20px;">
+        <h2 class="card-title">
+            {{ fullName() }}
+        </h2>
+        <div class="card-body">
+            <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+
+                <div class="kv" style="flex:1;">
+                    <span class="k" style="font-weight:600;">ID:</span>
+                    <span class="v mono">{{ user.id }}</span>
+                </div>
+
+                <div class="kv" style="flex:1; text-align:center;">
+                    <span class="k" style="font-weight:600;">UserId:</span>
+                    <span class="v">{{ user.userId }}</span>
+                </div>
+
+                <div class="kv" style="flex:1; text-align:right;">
+                    <span class="k" style="font-weight:600;">Username:</span>
+                    <span class="v">{{ user.username }}</span>
+                </div>
+
             </div>
-            <div>
-                <div class="kv"><span class="k">UserId:</span> <span class="v">{{ user.userId }}</span></div>
+
+            <!-- Age -->
+            <div class="kv">
+                <span class="k" style="font-weight:600;">Age:</span>
+                <span class="v">{{ displayAge() }}</span>
             </div>
-            <div>
-                <div class="kv"><span class="k">Username:</span> <span class="v">{{ user.username }}</span></div>
-            </div>
+
         </div>
     </div>
 
