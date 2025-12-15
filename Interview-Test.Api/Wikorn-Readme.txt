@@ -1,8 +1,10 @@
-﻿docker build -f Interview-Test/Interview-Test.Api/Dockerfile -t interview-test.api .
+﻿DOCKER
+======
+docker build -f Interview-Test/Interview-Test.Api/Dockerfile -t interview-test.api .
 
-docker run --rm -it -p 8000:8080 -e ASPNETCORE_ENVIRONMENT=Development interview-test.api
+docker run --rm -it -p 44307:44307 -e ASPNETCORE_ENVIRONMENT=Development interview-test.api
 
-docker run --rm -it -p 8000:8080 interview-test.api
+docker run --rm -it -p 44307:44307 interview-test.api
 
 
 dotnet ef migrations add InitializeDb -p Interview-Test.Infrastructure -s Interview-Test.Api
