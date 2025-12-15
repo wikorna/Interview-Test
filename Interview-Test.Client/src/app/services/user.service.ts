@@ -21,7 +21,7 @@ export interface UserDetailDto {
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private readonly apiBaseUrl = 'https://localhost:44375/gateway/api/user';
-  private readonly apiKeyPlainText = '<your hashed sha512 x-api-key>';
+  private readonly apiKeyPlainText = 'DEV-INTERVIEW-KEY-2025';
 
   constructor(private readonly http: HttpClient) {}
 

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Interview_Test.Infrastructure.Migrations
 {
     [DbContext(typeof(InterviewTestDbContext))]
-    [Migration("20251213090640_InitializeDb")]
+    [Migration("20251214092542_InitializeDb")]
     partial class InitializeDb
     {
         /// <inheritdoc />

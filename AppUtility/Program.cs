@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 Console.WriteLine("Hello, Exim Bank Hash Utility!");
-string key = "<your hashed sha512 x-api-key>";
+string key = "DEV-INTERVIEW-KEY-2025";
 
 using var sha = SHA512.Create();
 var hashBytes = sha.ComputeHash(Encoding.UTF8.GetBytes(key));
